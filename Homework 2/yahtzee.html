@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--    Name: John Southworth
+ 	Course: 235.01
+ 	Homework #2
+ 	Git-Hub: https://github.com/yourName/yourHomeWork
+	Date Started: 4/11/23
+	Date Due: 5/2/23
+-->
+<html>
+	<head>
+	<title> Yahtzee </title>
+		<style type "text/css">
+			<!--
+
+			h1{
+				font-size: 30pt;
+				text-align:center;
+			}
+
+			div.a{
+				text-align:center;
+			}
+
+			table.a{
+				margin-top: 2cm;
+				margin-left:auto;
+				margin-right:auto;			
+			}
+
+			td.a{
+				text-align:right;
+				font-family: "Arial";
+				font-weight: bold;
+			}
+
+			td.b{
+				text-align: right;
+				border:1px outset #676767;
+				background-color: #AEAEFF;
+				width: 2em;
+			}
+
+			td.c{
+				text-align: center;
+				padding-left: 4cm;
+				width:100px;
+			}
+
+			button.a {
+				font-family: "Times New Roman";
+				font-size: 15pt;
+				color: #F4E6D8;
+				background-color:#5701CE;
+			}
+
+			button.b {
+				font-family: "Times New Roman";
+				font-size: 14pt;
+				color: #020B36;
+				background-color:#ACBFBD;
+				border-width: 1px;
+			}
+
+			-->
+		</style>
+	</head>
+	<body>
+		<script language = "JavaScript">
+		<!--
+
+		var dice = new Array(0,0,0,0,0);
+		var locked = new Array(false,false,false,false,false);
+		var score = new Array(0,0,0,0,0,0,0);
+		var scrCalc = new Array(0,0,0,0,0,0,0,0,0,0);
+		var scrLock = new Array(false,false,false,false,false,false,false,false,false,false);
+		var rollCount = 0;
+		var sum = 0;
+		
+		function roll()
+		{
+			rollCount++;
+			score[1]=score[2]=score[3]=score[4]=score[5]=score[6]=0;
+			for(var i=0;i<5;i++)
+			{
+				if (!locked[i] && rollCount <= 3)
+				{
+					var d = document.getElementById("d"+i);
+					dice[i] = Math.floor(6*Math.random())+ 1;
+					d.src="HW2/pix/dice"+dice[i]+".gif";
+				}
+				score[dice[i]]++;
+			}
+
+		}
+
+		function lock(i)
+		{
+
+			var t = document.getElementById("d"+i)
+			locked[i] = !locked[i]
+
+			if(locked[i])
+			{
+				t.src="HW2/pix/diceX"+dice[i]+".gif";
+			}
+			else
+			{
+				t.src="HW2/pix/dice"+dice[i]+".gif";
+			}
+
+		}
+
+		function scr(k)
+		{
+			var t = document.getElementById("s" + k);
+			if (!scrLock[k])
+			{
+				t.innerHTML = score[k]*k;
+				scrCalc[k] = score[k]*k;
+			}
+		}
+
+		function clr(k)
+		{
+			if (!scrLock[k])
+			{
+				document.getElementById("s" + k).innerHTML = "";
+			}
+		}
+
+		function scrSet(q)
+		{
+			var t = document.getElementById("total");
+			if (!scrLock[q])
+			{
+				rollCount = 0;
+				scrLock[q] = true;
+				if(t.innerHTML == "")
+				{
+					t.innerHTML = scrCalc[q];
+				}
+				else
+				{
+					sum = parseInt(t.innerHTML) + parseInt(scrCalc[q]);
+					t.innerHTML = sum;
+				}
+			}
+			for(var i=0;i<5;i++)
+			{
+				var d = document.getElementById("d"+i);
+				locked[i]=false;
+				d.src = "HW2/pix/dice0.gif";
+			}
+		}
+
+		function kind1()
+		{
+			var threeKind = document.getElementById("s7");
+			if (!scrLock[7])
+			{
+				scrCalc[7] = 0;
+				threeKind.innerHTML = 0;
+				for (var i=0; i<6; i++)
+				{
+					if (score[i] >= 3)
+					{
+						scrCalc[7] = (score[1] * 1) + (score[2] * 2) + (score[3] * 3) + (score[4] * 4) + (score[5] * 5) + (score[6] * 6);
+						threeKind.innerHTML = scrCalc[7];
+					}
+				}
+			}
+		}
+		function kind2()
+		{
+			var fourKind = document.getElementById("s8");
+			if (!scrLock[8])
+			{
+				scrCalc[8] = 0;
+				fourKind.innerHTML = 0;
+				for (var b=0; b<6; b++)
+				{
+					if (score[b] >= 4)
+					{
+						scrCalc[8] = (score[1] * 1) + (score[2] * 2) + (score[3] * 3) + (score[4] * 4) + (score[5] * 5) + (score[6] * 6);
+						fourKind.innerHTML = scrCalc[8];
+					}
+				}
+			}
+		}
+		function kind3()
+		{
+			var yahtzee = document.getElementById("s9");
+			if (!scrLock[9])
+			{
+				scrCalc[9] = 0;
+				yahtzee.innerHTML = 0;
+				for (var c=0; c<6; c++)
+				{
+					if (score[c] == 5)
+					{
+						scrCalc[9] = (score[1] * 1) + (score[2] * 2) + (score[3] * 3) + (score[4] * 4) + (score[5] * 5) + (score[6] * 6);
+						yahtzee.innerHTML = scrCalc[9];
+					}
+				}
+			}
+		}
+		function newGame()
+		{
+			var t = document.getElementById("total").innerHTML=("");
+			var s1 = document.getElementById("s1").innerHTML=("");
+			var s2 = document.getElementById("s2").innerHTML=("");
+			var s3 = document.getElementById("s3").innerHTML=("");
+			var s4 = document.getElementById("s4").innerHTML=("");
+			var s5 = document.getElementById("s5").innerHTML=("");
+			var s6 = document.getElementById("s6").innerHTML=("");
+			var s7 = document.getElementById("s7").innerHTML=("");
+			var s8 = document.getElementById("s8").innerHTML=("");
+			var s9 = document.getElementById("s9").innerHTML=("");
+			var d0 = document.getElementById("d0").src = "HW2/pix/dice0.gif";
+			var d1 = document.getElementById("d1").src = "HW2/pix/dice0.gif";
+			var d2 = document.getElementById("d2").src = "HW2/pix/dice0.gif";
+			var d3 = document.getElementById("d3").src = "HW2/pix/dice0.gif";
+			var d4 = document.getElementById("d4").src = "HW2/pix/dice0.gif";
+			scrLock[1]=scrLock[2]=scrLock[3]=scrLock[4]=scrLock[5]=scrLock[6]=scrLock[7]=scrLock[8]=scrLock[9]=false;
+			locked[0]=locked[1]=locked[2]=locked[3]=locked[4]=false;
+			scrCalc[1]=scrCalc[2]=scrCalc[3]=scrCalc[4]=scrCalc[5]=scrCalc[6]=scrCalc[7]=scrCalc[8]=scrCalc[9]=0;
+			score[1]=score[2]=score[3]=score[4]=score[5]=score[6]=0;
+			dice[0]=dice[1]=dice[2]=dice[3]=dice[4]=0;
+			rollCount = 0;
+			sum = 0;
+
+		}
+		//-->
+
+		//-->
+		</script>
+		<h1> Yahtzee </h1>
+		<div class="a">
+			<img id= "d0" onClick ="lock(0)" src="HW2/pix/dice0.gif">
+			<img id= "d1" onClick ="lock(1)" src="HW2/pix/dice0.gif">
+			<img id= "d2" onClick ="lock(2)" src="HW2/pix/dice0.gif">
+			<img id= "d3" onClick ="lock(3)" src="HW2/pix/dice0.gif">
+			<img id= "d4" onClick ="lock(4)" src="HW2/pix/dice0.gif">
+		</div>
+		<table class = "a">
+		<tr> <td class = "a">1's</td> <td id = "s1" onMouseOver="scr(1)" onMouseOut="clr(1)" onClick="scrSet(1)" class = "b"> </td> 
+			<td class = "c" rowspan = "5"> <button onClick="roll()" class = "a"> Roll </button> </td> </tr>
+		<tr> <td class = "a">2's</td> <td id = "s2" onMouseOver="scr(2)" onMouseOut="clr(2)" onClick="scrSet(2)" class = "b"> </td> </tr>
+		<tr> <td class = "a">3's</td> <td id = "s3" onMouseOver="scr(3)" onMouseOut="clr(3)" onClick="scrSet(3)" class = "b"> </td> </tr>
+		<tr> <td class = "a">4's</td> <td id = "s4" onMouseOver="scr(4)" onMouseOut="clr(4)" onClick="scrSet(4)" class = "b"> </td> </tr>
+		<tr> <td class = "a">5's</td> <td id = "s5" onMouseOver="scr(5)" onMouseOut="clr(5)" onClick="scrSet(5)" class = "b"> </td> </tr>
+		<tr> <td class = "a">6's</td> <td id = "s6" onMouseOver="scr(6)" onMouseOut="clr(6)" onClick="scrSet(6)" class = "b"> </td> 
+			<td class = "c" rowspan = "5"> <button onclick="newGame()" class = "b"> New game </button> </td> </tr>
+		<tr> <td class = "a">3 of a kind</td> <td id = "s7" onMouseOver="kind1()" onMouseOut="clr(7)" onClick="scrSet(7)" class = "b"> </td> </tr>
+		<tr> <td class = "a">4 of a kind</td> <td id = "s8" onMouseOver="kind2()" onMouseOut="clr(8)" onClick="scrSet(8)" class = "b"> </td> </tr>
+		<tr> <td class = "a">Yahtzee</td> <td id = "s9" onMouseOver="kind3()" onMouseOut="clr(9)" onClick="scrSet(9)" class = "b"> </td> </tr>
+		<tr> <td class = "a">Total</td> <td id = "total" class = "b"></td> </tr>
+		</table>
+	</body>
+</html>
